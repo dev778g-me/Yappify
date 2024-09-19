@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:social/screens/apppage/postingscreen.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -7,9 +9,14 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          shape: CircleBorder(),
+          isExtended: false,
+          onPressed: () {
+            Get.offAll(Postingscreen());
+          },
+          child: Icon(Iconsax.add)),
       appBar: AppBar(
-        elevation: 2,
-        shadowColor: Colors.black,
         title: const Text('Yappify'),
         actions: [
           IconButton(

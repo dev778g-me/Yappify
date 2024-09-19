@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
@@ -15,7 +16,7 @@ class Homescreen extends StatefulWidget {
 }
 
 int currentindex = 0;
-List pages = [Homepage(), Searchpage(), Profilepage()];
+List pages = [const Homepage(), const Searchpage(), Profilepage()];
 
 class _HomescreenState extends State<Homescreen> {
   signout() async {
@@ -30,15 +31,17 @@ class _HomescreenState extends State<Homescreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           selectedIndex: currentindex,
           elevation: 0,
           onDestinationSelected: (value) {
+            HapticFeedback.lightImpact();
             setState(() {
               currentindex = value;
             });
           },
-          destinations: [
-            NavigationDestination(icon: Icon(Iconsax.home), label: 'Home'),
+          destinations: const [
+            NavigationDestination(icon: Icon(Iconsax.home_2), label: 'Home'),
             NavigationDestination(
                 icon: Icon(Iconsax.search_normal), label: 'Search'),
             NavigationDestination(

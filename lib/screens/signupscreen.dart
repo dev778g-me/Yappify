@@ -74,11 +74,17 @@ class _SignupscreenState extends State<Signupscreen> {
               ),
               const Text(
                 'Welcome User',
-                style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const Text(
                 'Please enter your details to Create Account',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white),
               ),
               LottieBuilder.asset(
                 'assets/login.json',
@@ -88,7 +94,7 @@ class _SignupscreenState extends State<Signupscreen> {
                 height: 40,
               ),
               MaterialTextField(
-                controller: namecontroll,
+                controller: namecontroll, style: TextStyle(color: Colors.white),
                 keyboardType: TextInputType.name,
                 hint: 'Name',
                 textInputAction: TextInputAction.next,
@@ -101,7 +107,7 @@ class _SignupscreenState extends State<Signupscreen> {
                 height: 20,
               ),
               MaterialTextField(
-                controller: biocontroll,
+                controller: biocontroll, style: TextStyle(color: Colors.white),
                 keyboardType: TextInputType.text,
                 hint: 'Bio',
                 textInputAction: TextInputAction.next,
@@ -115,6 +121,7 @@ class _SignupscreenState extends State<Signupscreen> {
               ),
               MaterialTextField(
                 controller: emailcontroll,
+                style: TextStyle(color: Colors.white),
                 keyboardType: TextInputType.emailAddress,
                 hint: 'Email',
                 textInputAction: TextInputAction.next,
@@ -129,6 +136,7 @@ class _SignupscreenState extends State<Signupscreen> {
               MaterialTextField(
                 obscureText: showing ? false : true,
                 controller: passwordcontroll,
+                style: TextStyle(color: Colors.white),
                 keyboardType: TextInputType.emailAddress,
                 hint: 'Password',
                 textInputAction: TextInputAction.next,
@@ -156,7 +164,7 @@ class _SignupscreenState extends State<Signupscreen> {
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
                   decoration: BoxDecoration(
                       color: Colors.blue,
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(50)),
                   alignment: Alignment.center,
                   child: isloading
                       ? CircularProgressIndicator(

@@ -59,11 +59,17 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
               const Text(
                 'Welcome Back',
-                style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const Text(
                 'Please enter your details to sign in',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white),
               ),
               LottieBuilder.asset('assets/login.json'),
               const SizedBox(
@@ -72,6 +78,7 @@ class _LoginscreenState extends State<Loginscreen> {
 
               MaterialTextField(
                 controller: emailcontroller,
+                style: TextStyle(color: Colors.white),
                 keyboardType: TextInputType.emailAddress,
                 hint: 'Email',
                 textInputAction: TextInputAction.next,
@@ -87,6 +94,7 @@ class _LoginscreenState extends State<Loginscreen> {
               MaterialTextField(
                 obscureText: showing ? false : true,
                 controller: passwordcontroller,
+                style: TextStyle(color: Colors.white),
                 keyboardType: TextInputType.emailAddress,
                 hint: 'Password',
                 textInputAction: TextInputAction.next,
@@ -114,7 +122,7 @@ class _LoginscreenState extends State<Loginscreen> {
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
                   decoration: BoxDecoration(
                       color: Colors.blue,
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(50)),
                   alignment: Alignment.center,
                   child: isloading
                       ? const CircularProgressIndicator(
@@ -135,7 +143,10 @@ class _LoginscreenState extends State<Loginscreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Dont Have Account ?'),
+                  const Text(
+                    'Dont Have Account ?',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   MaterialButton(
                     onPressed: () {
                       Navigator.push(context,
@@ -146,7 +157,8 @@ class _LoginscreenState extends State<Loginscreen> {
                     child: const Text(
                       'Create Account',
                       style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                          color: Color(0XffF42D92),
+                          fontWeight: FontWeight.bold),
                     ),
                   )
                 ],

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_text_fields/theme/material_text_field_theme.dart';
-import 'package:social/screens/homescreen.dart';
 
 import 'package:social/screens/wrapper.dart';
 
@@ -31,12 +30,11 @@ class MyApp extends StatelessWidget {
             errorStyle:
                 const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             fillColor: Colors.transparent,
-            prefixIconColor: Colors.black,
-            enabledColor: Colors.grey,
+            enabledColor: Colors.white,
             focusedColor: Colors.blue,
             floatingLabelStyle: const TextStyle(color: Colors.green),
             width: 1.5,
-            labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
+            labelStyle: const TextStyle(fontSize: 16, color: Colors.white),
           ),
           fontFamily: GoogleFonts.dmSans().fontFamily,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
