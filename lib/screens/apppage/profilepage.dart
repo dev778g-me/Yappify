@@ -29,9 +29,7 @@ class _ProfilepageState extends State<Profilepage> {
         .doc(_user.currentUser!.uid)
         .get();
     print(snapshot.data());
-    setState(() {
-      username = (snapshot.data() as Map<String, dynamic>)['name'];
-    });
+    setState(() {});
   }
 
   @override

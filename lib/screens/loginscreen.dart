@@ -3,7 +3,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 
@@ -60,16 +59,16 @@ class _LoginscreenState extends State<Loginscreen> {
               const Text(
                 'Welcome Back',
                 style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                  fontSize: 34,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const Text(
                 'Please enter your details to sign in',
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               LottieBuilder.asset('assets/login.json'),
               const SizedBox(
@@ -78,7 +77,7 @@ class _LoginscreenState extends State<Loginscreen> {
 
               MaterialTextField(
                 controller: emailcontroller,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(),
                 keyboardType: TextInputType.emailAddress,
                 hint: 'Email',
                 textInputAction: TextInputAction.next,
@@ -94,7 +93,7 @@ class _LoginscreenState extends State<Loginscreen> {
               MaterialTextField(
                 obscureText: showing ? false : true,
                 controller: passwordcontroller,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(),
                 keyboardType: TextInputType.emailAddress,
                 hint: 'Password',
                 textInputAction: TextInputAction.next,
@@ -145,7 +144,7 @@ class _LoginscreenState extends State<Loginscreen> {
                 children: [
                   const Text(
                     'Dont Have Account ?',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(),
                   ),
                   MaterialButton(
                     onPressed: () {
@@ -157,8 +156,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     child: const Text(
                       'Create Account',
                       style: TextStyle(
-                          color: Color(0XffF42D92),
-                          fontWeight: FontWeight.bold),
+                          color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
                   )
                 ],

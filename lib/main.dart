@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             errorStyle:
                 const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             fillColor: Colors.transparent,
-            enabledColor: Colors.white,
+            enabledColor: Colors.black,
             focusedColor: Colors.blue,
             floatingLabelStyle: const TextStyle(color: Colors.green),
             width: 1.5,

@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,6 +18,55 @@ class Postingscreen extends StatefulWidget {
 
 class _PostingscreenState extends State<Postingscreen> {
   File? _selectimg;
+  final _user = FirebaseAuth.instance.currentUser;
+  final yappcontroll = TextEditingController();
+  bool posting = false;
+  String username = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getusername();
+  }
+
+  void getusername() async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_user!.uid)
+        .get();
+    print(snapshot.data());
+    setState(() {
+      username = (snapshot.data() as Map<String, dynamic>)['name'];
+    });
+  }
+
+  Future<void> postayapp(String yapp) async {
+    setState(() {
+      posting = true;
+    });
+    if (_user != null) {
+      String useriD = _user.uid;
+      String email = _user.email.toString();
+
+      await FirebaseFirestore.instance.collection('Posts').add({
+        'userid': useriD,
+        'timestamp': Timestamp.now(),
+        'content': yapp,
+        'likes': 0,
+        'name': username,
+        'email': email,
+        'liked by': []
+      }).then((_) {
+        Get.snackbar('Success', 'Post added Successfully',
+            backgroundColor: Colors.green.withOpacity(0.1),
+            colorText: Colors.green,
+            snackPosition: SnackPosition.TOP);
+        print('succsess');
+      }).catchError((onError) {
+        print(onError);
+      });
+    }
+  }
 
   Future _pickimagefromgallery() async {
     final rerunimage =
@@ -27,7 +77,7 @@ class _PostingscreenState extends State<Postingscreen> {
   }
 
   final _maxlength = 200;
-  final _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +93,11 @@ class _PostingscreenState extends State<Postingscreen> {
                     ),
                     backgroundColor: Colors.blue,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    postayapp(yappcontroll.text);
+                    yappcontroll.clear();
+                    Get.offAll(() => Homescreen());
+                  },
                   child: Text(
                     'Post',
                     style: TextStyle(
@@ -88,7 +142,7 @@ class _PostingscreenState extends State<Postingscreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              controller: _controller,
+              controller: yappcontroll,
               maxLines: null, // Allows for multiple lines
               maxLength: _maxlength,
               decoration: const InputDecoration(
