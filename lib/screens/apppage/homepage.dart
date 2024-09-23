@@ -1,27 +1,83 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:like_button/like_button.dart';
+import 'package:social/screens/apppage/commentpage.dart';
 import 'package:social/screens/apppage/postingscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   const Homepage({super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  final user = FirebaseAuth.instance.currentUser; // Current logged in user
+
+  // Function to toggle the like status
+  Future<void> toggleLike(DocumentSnapshot post) async {
+    final postRef = FirebaseFirestore.instance.collection('Posts').doc(post.id);
+    final userId = user?.uid; // Get the current user ID
+
+    if (post['liked by'].contains(userId)) {
+      // Unlike: Remove user ID from likedBy list and decrement like count
+      await postRef.update({
+        'liked by': FieldValue.arrayRemove([userId]),
+        'likes': FieldValue.increment(-1),
+      });
+    } else {
+      // Like: Add user ID to likedBy list and increment like count
+      await postRef.update({
+        'liked by': FieldValue.arrayUnion([userId]),
+        'likes': FieldValue.increment(1),
+      });
+    }
+  }
+
+  moreoption() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            ListTile(
+              title: Text('Delete Post'),
+              leading: Icon(Iconsax.profile_delete),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              title: Text('Block User'),
+              leading: Icon(Iconsax.text_block),
+            )
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
           isExtended: false,
           onPressed: () {
-            Get.offAll(Postingscreen());
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Postingscreen()));
           },
-          child: Icon(Iconsax.add)),
+          child: const Icon(Iconsax.add)),
       appBar: AppBar(
         title: const Text('Yappify'),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Postingscreen()));
+              },
               icon: const Icon(
                 Iconsax.add_square,
                 color: Colors.black,
@@ -59,46 +115,52 @@ class Homepage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 10),
                   child: Column(children: [
                     Stack(children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 25,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 50),
+                        padding: const EdgeInsets.only(left: 50),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10),
+                                  padding: const EdgeInsets.only(top: 10),
                                   child: Text(
                                     posts['email'],
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10),
+                                  padding: const EdgeInsets.only(top: 10),
                                   child: Text(
                                     posts['name'],
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w200),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w200),
                                   ),
                                 ),
+                                Spacer(),
+                                GestureDetector(
+                                    onTap: () {
+                                      moreoption();
+                                    },
+                                    child: Icon(Icons.more_vert))
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: const EdgeInsets.only(left: 10),
                               child: Text(posts['content']),
                             ),
                             Padding(
@@ -107,13 +169,31 @@ class Homepage extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Icon(
-                                    Icons.favorite_outline,
+                                  // LikeButton widget with Firestore integration
+                                  LikeButton(
+                                    likeCount: posts['likes'],
+                                    isLiked: posts['liked by'].contains(user
+                                        ?.uid), // Check if the user has liked the post
+                                    countPostion: CountPostion.right,
                                     size: 18,
+                                    onTap: (isLiked) async {
+                                      await toggleLike(posts);
+                                      return !isLiked; // Return the new like state
+                                    },
                                   ),
-                                  Icon(
-                                    Iconsax.message,
-                                    size: 18,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CommentScreen(
+                                                      postId: posts.id)));
+                                    },
+                                    child: Icon(
+                                      Iconsax.message,
+                                      size: 18,
+                                    ),
                                   ),
                                   Icon(
                                     Icons.auto_graph,
@@ -134,7 +214,7 @@ class Homepage extends StatelessWidget {
                         ),
                       ),
                     ]),
-                    Divider()
+                    const Divider()
                   ]),
                 ));
           }).toList());
