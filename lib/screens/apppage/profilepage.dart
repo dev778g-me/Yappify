@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social/screens/apppage/commentpage.dart';
 
 class Profilepage extends StatefulWidget {
@@ -15,6 +19,35 @@ class _ProfilepageState extends State<Profilepage> {
   final _user = FirebaseAuth.instance;
   String username = '';
   String uid = '';
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickimage() async {
+    final pickedfile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedfile != null) {
+      setState(() {
+        _image = File(pickedfile.path);
+      });
+      _uploadimage();
+    }
+  }
+
+  Future<void> _uploadimage() async {
+    if (_image == null) {
+      return;
+    }
+    final storageref = FirebaseStorage.instance.ref().child('users/');
+    final uploadtask = storageref.putFile(_image!);
+    final snapshot = await uploadtask.whenComplete(() {});
+
+    final downloadurl = await snapshot.ref.getDownloadURL();
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user.currentUser!.uid)
+        .update({
+      'profilePicture': downloadurl,
+    });
+  }
 
   @override
   void initState() {
@@ -96,7 +129,11 @@ class _ProfilepageState extends State<Profilepage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Iconsax.add_square4)),
+          IconButton(
+              onPressed: () {
+                _pickimage();
+              },
+              icon: const Icon(Iconsax.add_square4)),
           IconButton(
               onPressed: () {
                 showsheet();
@@ -113,10 +150,11 @@ class _ProfilepageState extends State<Profilepage> {
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(color: Colors.transparent),
               currentAccountPicture: const CircleAvatar(
-                  // Optionally add a network image or local asset here
-                  // backgroundImage: AssetImage(
-                  //     'assets/images/user_placeholder.png'), // Placeholder image
-                  ),
+                child: Icon(Iconsax.activity),
+                // Optionally add a network image or local asset here
+                // backgroundImage: AssetImage(
+                //     'assets/images/user_placeholder.png'), // Placeholder image
+              ),
               accountName: Text(
                 _user.currentUser!.email.toString(),
                 style: const TextStyle(color: Colors.black),

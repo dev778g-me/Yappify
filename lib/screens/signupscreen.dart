@@ -37,13 +37,15 @@ class _SignupscreenState extends State<Signupscreen> {
         'bio': biocontroll.text,
         'followers': [],
         'following': [],
+        'pfp': '',
+        'id': User.user!.uid
       }).then((_) {
         Get.snackbar('Success', 'Logged in Successfully',
             backgroundColor: Colors.green.withOpacity(0.1),
             colorText: Colors.green,
             snackPosition: SnackPosition.TOP);
       });
-      Get.offAll(Wrapper());
+      Get.offAll(const Wrapper());
     } on FirebaseAuthException catch (e) {
       return Get.snackbar('Error', e.toString(),
           backgroundColor: Colors.red.withOpacity(0.1),
@@ -69,7 +71,7 @@ class _SignupscreenState extends State<Signupscreen> {
               //   Iconsax.cloud,
               //   size: 100,
               // ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               const Text(
@@ -154,22 +156,35 @@ class _SignupscreenState extends State<Signupscreen> {
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               GestureDetector(
-                onTap: signup,
+                onTap: () {
+                  if (namecontroll.text.isNotEmpty &&
+                      emailcontroll.text.isNotEmpty &&
+                      passwordcontroll.text.isNotEmpty &&
+                      biocontroll.text.isNotEmpty) {
+                    signup();
+                  } else {
+                    Get.snackbar('Error', 'Please Fill Out All Required Fields',
+                        backgroundColor: Colors.red.withOpacity(0.1),
+                        colorText: Colors.red,
+                        snackPosition: SnackPosition.TOP);
+                  }
+                },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
                   decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(50)),
                   alignment: Alignment.center,
                   child: isloading
-                      ? CircularProgressIndicator(
+                      ? const CircularProgressIndicator(
                           color: Colors.white,
                         )
-                      : Text(
+                      : const Text(
                           'Create Account',
                           style: TextStyle(
                               color: Colors.white,
@@ -178,7 +193,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
             ],

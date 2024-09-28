@@ -5,6 +5,8 @@ import 'package:like_button/like_button.dart';
 import 'package:social/screens/apppage/commentpage.dart';
 import 'package:social/screens/apppage/postingscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:social/screens/apppage/prof.dart';
+import 'package:social/screens/apppage/profilepage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -14,8 +16,15 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final user = FirebaseAuth.instance.currentUser; // Current logged in user
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getdata();
+  }
 
+  final user = FirebaseAuth.instance.currentUser; // Current logged in user
+  String username = '';
   // Function to toggle the like status
   Future<void> toggleLike(DocumentSnapshot post) async {
     final postRef = FirebaseFirestore.instance.collection('Posts').doc(post.id);
@@ -42,7 +51,7 @@ class _HomepageState extends State<Homepage> {
       builder: (context) {
         return Wrap(
           children: [
-            ListTile(
+            const ListTile(
               title: Text('Delete Post'),
               leading: Icon(Iconsax.profile_delete),
             ),
@@ -50,8 +59,8 @@ class _HomepageState extends State<Homepage> {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              title: Text('Block User'),
-              leading: Icon(Iconsax.text_block),
+              title: const Text('Block User'),
+              leading: const Icon(Iconsax.text_block),
             )
           ],
         );
@@ -59,9 +68,32 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+  Future<void> getdata() async {
+    if (user != null) {
+      try {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user!.uid)
+            .get();
+        if (snapshot.exists) {
+          setState(() {
+            username = snapshot['id'] ?? 'No name';
+          });
+        } else {
+          print('Document does not exist');
+        }
+      } catch (e) {
+        print('Error fetching data: $e');
+      }
+    } else {
+      print('User is not logged in');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const Drawer(),
       floatingActionButton: FloatingActionButton(
           shape: const CircleBorder(),
           isExtended: false,
@@ -115,8 +147,20 @@ class _HomepageState extends State<Homepage> {
                   padding: const EdgeInsets.only(top: 10),
                   child: Column(children: [
                     Stack(children: [
-                      const CircleAvatar(
-                        radius: 25,
+                      GestureDetector(
+                        onTap: () {
+                          if (user!.uid == username) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Prof()));
+                          }
+                        },
+                        child: CircleAvatar(
+                          // backgroundImage:
+                          // NetworkImage(posts['profilePicture']),
+                          radius: 25,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 50),
@@ -148,12 +192,12 @@ class _HomepageState extends State<Homepage> {
                                         fontWeight: FontWeight.w200),
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 GestureDetector(
                                     onTap: () {
                                       moreoption();
                                     },
-                                    child: Icon(Icons.more_vert))
+                                    child: const Icon(Icons.more_vert))
                               ],
                             ),
                             const SizedBox(
@@ -161,7 +205,7 @@ class _HomepageState extends State<Homepage> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
-                              child: Text(posts['content']),
+                              child: SelectableText(posts['content']),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10, top: 5),
@@ -190,20 +234,20 @@ class _HomepageState extends State<Homepage> {
                                                   CommentScreen(
                                                       postId: posts.id)));
                                     },
-                                    child: Icon(
+                                    child: const Icon(
                                       Iconsax.message,
                                       size: 18,
                                     ),
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.auto_graph,
                                     size: 18,
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Iconsax.bookmark,
                                     size: 18,
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.share_rounded,
                                     size: 18,
                                   )

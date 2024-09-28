@@ -42,7 +42,7 @@ class _CommentScreenState extends State<CommentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Comments'),
+          title: const Text('Comments'),
         ),
         body: Column(
           children: [

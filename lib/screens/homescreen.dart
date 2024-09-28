@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:social/screens/apppage/homepage.dart';
 import 'package:social/screens/apppage/noti.dart';
 import 'package:social/screens/apppage/profilepage.dart';
@@ -35,54 +35,36 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        color: Colors.deepPurple.shade50,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: GNav(
-              padding: const EdgeInsets.all(14),
-              tabBackgroundColor: Colors.deepPurple.shade100,
-              backgroundColor: Colors.deepPurple.shade50,
-              color: Colors.black,
-              activeColor: Colors.deepPurple,
-              gap: 5,
-              style: GnavStyle.google,
-              selectedIndex: currentindex,
-              onTabChange: (value) {
-                setState(() {
-                  currentindex = value;
-                });
-              },
-              tabs: const [
-                GButton(
-                  icon: Iconsax.home,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Iconsax.search_normal,
-                  text: 'Search',
-                ),
-                GButton(
-                  icon: Iconsax.notification_favorite,
-                  text: 'Notification',
-                ),
-                GButton(
-                  icon: Iconsax.personalcard,
-                  text: 'Profile',
-                ),
-              ]),
-        ),
-      ),
+      bottomNavigationBar: SalomonBottomBar(
+          currentIndex: currentindex,
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Colors.deepPurple,
+          onTap: (value) {
+            //  HapticFeedback.lightImpact();
+            setState(() {
+              currentindex = value;
+            });
+          },
+          items: [
+            SalomonBottomBarItem(
+                icon: const Icon(Iconsax.home), title: const Text('Home')),
+            SalomonBottomBarItem(
+                icon: const Icon(Iconsax.search_favorite),
+                title: const Text('Search')),
+            SalomonBottomBarItem(
+                icon: const Icon(Iconsax.notification),
+                title: const Text('Notification')),
+            SalomonBottomBarItem(
+                icon: const Icon(Iconsax.personalcard),
+                title: const Text('Profile')),
+          ]),
       //
       // NavigationBar(
       //     labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       //     selectedIndex: currentindex,
       //     elevation: 0,
       //     onDestinationSelected: (value) {
-      //       HapticFeedback.lightImpact();
-      //       setState(() {
-      //         currentindex = value;
-      //       });
+      //
       //     },
       //     destinations: const [
       //       NavigationDestination(icon: Icon(Iconsax.home_2), label: 'Home'),
