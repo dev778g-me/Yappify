@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,8 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social/screens/apppage/commentpage.dart';
 
 class Profilepage extends StatefulWidget {
-  Profilepage({super.key});
-
   @override
   State<Profilepage> createState() => _ProfilepageState();
 }
@@ -21,6 +18,7 @@ class _ProfilepageState extends State<Profilepage> {
   String uid = '';
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  String urld = '';
 
   Future<void> _pickimage() async {
     final pickedfile = await _picker.pickImage(source: ImageSource.gallery);
@@ -33,19 +31,22 @@ class _ProfilepageState extends State<Profilepage> {
   }
 
   Future<void> _uploadimage() async {
-    if (_image == null) {
-      return;
-    }
-    final storageref = FirebaseStorage.instance.ref().child('users/');
+    if (_image == null) return;
+
+    final storageref = FirebaseStorage.instance
+        .ref()
+        .child('users/${_user.currentUser!.uid}.jpg'); // Unique path per user
     final uploadtask = storageref.putFile(_image!);
     final snapshot = await uploadtask.whenComplete(() {});
 
     final downloadurl = await snapshot.ref.getDownloadURL();
     await FirebaseFirestore.instance
-        .collection('users')
+        .collection('Users')
         .doc(_user.currentUser!.uid)
-        .update({
-      'profilePicture': downloadurl,
+        .update({'pfp': downloadurl});
+
+    setState(() {
+      urld = downloadurl;
     });
   }
 
@@ -61,12 +62,13 @@ class _ProfilepageState extends State<Profilepage> {
       DocumentSnapshot snapshot =
           await FirebaseFirestore.instance.collection('Users').doc(uid).get();
       setState(() {
-        username =
-            snapshot['username'] ?? ''; // Assuming 'username' is the field name
+        username = snapshot['name'] ?? '';
+        urld = snapshot['pfp'] ?? ''; // Fetch profile picture URL
       });
     } catch (e) {
-      print("Error fetching username: $e");
-      // You might want to handle this with a Snackbar or similar UI feedback.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error fetching username: $e")),
+      );
     }
   }
 
@@ -85,7 +87,7 @@ class _ProfilepageState extends State<Profilepage> {
             onPressed: () {
               FirebaseAuth.instance.signOut();
               Navigator.of(context).pop();
-              // Optionally navigate to the login page
+              // Navigate to the login page after logging out
             },
             child: const Text('Yes', style: TextStyle(color: Colors.red)),
           ),
@@ -100,9 +102,6 @@ class _ProfilepageState extends State<Profilepage> {
       builder: (BuildContext context) {
         return Wrap(
           children: [
-            Container(
-              height: 15,
-            ),
             ListTile(
               onTap: () {},
               leading: const Icon(Iconsax.setting),
@@ -129,18 +128,12 @@ class _ProfilepageState extends State<Profilepage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Iconsax.add_square4)),
           IconButton(
-              onPressed: () {
-                _pickimage();
-              },
-              icon: const Icon(Iconsax.add_square4)),
-          IconButton(
-              onPressed: () {
-                showsheet();
-              },
+              onPressed: () => showsheet(),
               icon: const Icon(Icons.menu_rounded))
         ],
-        title: Text('@${username}'),
+        title: Text(username),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -149,11 +142,16 @@ class _ProfilepageState extends State<Profilepage> {
           children: [
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(color: Colors.transparent),
-              currentAccountPicture: const CircleAvatar(
-                child: Icon(Iconsax.activity),
-                // Optionally add a network image or local asset here
-                // backgroundImage: AssetImage(
-                //     'assets/images/user_placeholder.png'), // Placeholder image
+              currentAccountPicture: GestureDetector(
+                onLongPress: () {
+                  _pickimage();
+                },
+                child: CircleAvatar(
+                  backgroundImage: urld.isNotEmpty
+                      ? NetworkImage(urld)
+                      : AssetImage('assets/icon.png'),
+                  child: urld.isEmpty ? Icon(Iconsax.activity) : null,
+                ),
               ),
               accountName: Text(
                 _user.currentUser!.email.toString(),
@@ -175,23 +173,17 @@ class _ProfilepageState extends State<Profilepage> {
               stream: FirebaseFirestore.instance
                   .collection('Posts')
                   .where('userid', isEqualTo: uid)
-                  //.orderBy('timestamp', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  print("Error: ${snapshot.error}");
                   return const Center(child: Text('Something went wrong.'));
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(child: Text('You have no posts.'));
                 }
-
-                // Debugging output
-                print("Posts fetched: ${snapshot.data!.docs.length}");
-                print(snapshot.data!.docs.map((doc) => doc.data()).toList());
 
                 return Expanded(
                   child: ListView(
@@ -202,7 +194,10 @@ class _ProfilepageState extends State<Profilepage> {
                           padding: const EdgeInsets.only(top: 10),
                           child: Column(children: [
                             Stack(children: [
-                              const CircleAvatar(radius: 25),
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundImage: NetworkImage(urld),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 50),
                                 child: Column(

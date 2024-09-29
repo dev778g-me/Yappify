@@ -32,7 +32,7 @@ class _SignupscreenState extends State<Signupscreen> {
           .collection('Users')
           .doc(User.user!.uid)
           .set({
-        'email ': emailcontroll.text,
+        'email': emailcontroll.text,
         'name': namecontroll.text,
         'bio': biocontroll.text,
         'followers': [],

@@ -59,6 +59,7 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   animations: ^2.0.11
   shared_preferences: ^2.3.2
+  dash_chat_2: ^0.0.21
 
 dev_dependencies:
   flutter_test:
