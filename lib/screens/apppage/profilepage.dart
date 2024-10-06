@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social/screens/apppage/commentpage.dart';
+import 'package:social/screens/loginscreen.dart';
 
 class Profilepage extends StatefulWidget {
   @override
@@ -72,63 +74,82 @@ class _ProfilepageState extends State<Profilepage> {
     }
   }
 
-  void logout() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you want to Log Out?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No', style: TextStyle(color: Colors.blue)),
-          ),
-          TextButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.of(context).pop();
-              // Navigate to the login page after logging out
-            },
-            child: const Text('Yes', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void showsheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Wrap(
-          children: [
-            ListTile(
-              onTap: () {},
-              leading: const Icon(Iconsax.setting),
-              title: const Text('Settings'),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(Iconsax.edit),
-              title: const Text('Edit Profile'),
-            ),
-            ListTile(
-              onTap: () => logout(),
-              leading: const Icon(Iconsax.logout),
-              title: const Text('Log Out'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    void logout() {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Log Out'),
+          content: const Text('Are you sure you want to Log Out?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false), // Close dialog
+              child: const Text('No', style: TextStyle(color: Colors.blue)),
+            ),
+            TextButton(
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance
+                      .signOut(); // Sign out from Firebase
+                  Navigator.of(context).pop(); // Close the dialog
+
+                  // Navigate to login page (replace 'LoginScreen()' with your login screen widget)
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => const Loginscreen()),
+                  );
+                } catch (e) {
+                  // Error handling
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error logging out: $e")),
+                  );
+                }
+              },
+              child: const Text('Yes', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
+      );
+    }
+
+    void showsheet() {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Wrap(
+            children: [
+              ListTile(
+                onTap: () {},
+                leading: const Icon(Iconsax.setting),
+                title: const Text('Settings'),
+              ),
+              ListTile(
+                onTap: () {},
+                leading: const Icon(Iconsax.edit),
+                title: const Text('Edit Profile'),
+              ),
+              ListTile(
+                onTap: () {
+                  logout();
+                },
+                leading: const Icon(Iconsax.logout),
+                title: const Text('Log Out'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Iconsax.add_square4)),
+          IconButton(
+              onPressed: () {
+                logout();
+              },
+              icon: const Icon(Iconsax.add_square4)),
           IconButton(
               onPressed: () => showsheet(),
               icon: const Icon(Icons.menu_rounded))
@@ -146,11 +167,21 @@ class _ProfilepageState extends State<Profilepage> {
                 onLongPress: () {
                   _pickimage();
                 },
-                child: CircleAvatar(
-                  backgroundImage: urld.isNotEmpty
-                      ? NetworkImage(urld)
-                      : AssetImage('assets/icon.png'),
-                  child: urld.isEmpty ? Icon(Iconsax.activity) : null,
+                child: CachedNetworkImage(
+                  imageUrl: urld, // URL for the profile image
+                  placeholder: (context, url) => const CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/icon.png'), // Default placeholder
+                    child: Icon(Iconsax.activity),
+                  ),
+                  errorWidget: (context, url, error) => const CircleAvatar(
+                    backgroundImage: AssetImage(
+                        'assets/icon.png'), // Fallback if error occurs
+                    child: Icon(Icons.error),
+                  ),
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    backgroundImage: imageProvider, // Show the cached image
+                  ),
                 ),
               ),
               accountName: Text(
@@ -161,7 +192,7 @@ class _ProfilepageState extends State<Profilepage> {
                 children: [
                   Text('Following', style: TextStyle(color: Colors.black)),
                   SizedBox(width: 16),
-                  Text('Followers', style: TextStyle(color: Colors.black))
+                  Text('Followers', style: TextStyle(color: Colors.black)),
                 ],
               ),
             ),

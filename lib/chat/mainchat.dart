@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:social/chat/chat.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -15,6 +13,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final _search = TextEditingController();
   Map<String, dynamic>? usermap;
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
   void onsearch() async {
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
     await _firestore
@@ -37,11 +36,20 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  String chatroomid(String user1, String user2) {
+    if (user1[0].toLowerCase().codeUnits[0] >
+        user2[0].toLowerCase().codeUnits[0]) {
+      return '$user1$user2';
+    } else {
+      return '$user2$user1';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Chat'),
+          title: const Text('Search Yapping'),
         ),
         body: Column(
           children: [
@@ -72,11 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.search),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Chatroom()));
-                        // onsearch();
+                        onsearch();
                       },
                     ),
                   ),
@@ -94,8 +98,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       subtitle: Text(usermap!['email']),
                     ),
                   )
-                : Center(
-                    child: Text('No User found'),
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                      child: Text('No User found'),
+                    ),
                   )
           ],
         ));

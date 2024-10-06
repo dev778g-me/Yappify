@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:social/chat/mainchat.dart';
 import 'package:social/screens/apppage/homepage.dart';
 import 'package:social/screens/apppage/noti.dart';
 import 'package:social/screens/apppage/profilepage.dart';
-import 'package:social/screens/apppage/searchpage.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -16,12 +16,7 @@ class Homescreen extends StatefulWidget {
 }
 
 int currentindex = 0;
-List pages = [
-  const Homepage(),
-  const Searchpage(),
-  const Notipage(),
-  Profilepage()
-];
+List pages = [const Homepage(), ChatScreen(), Profilepage()];
 
 class _HomescreenState extends State<Homescreen> {
   signout() async {
@@ -35,44 +30,46 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SalomonBottomBar(
-          currentIndex: currentindex,
-          unselectedItemColor: Colors.black,
-          selectedItemColor: Colors.deepPurple,
-          onTap: (value) {
-            //  HapticFeedback.lightImpact();
+      // bottomNavigationBar: SalomonBottomBar(
+      //     currentIndex: currentindex,
+      //     unselectedItemColor: Colors.black,
+      //     selectedItemColor: Colors.deepPurple,
+      //     onTap: (value) {
+      //       //  HapticFeedback.lightImpact();
+      //       setState(() {
+      //         currentindex = value;
+      //       });
+      //     },
+      //     items: [
+      //       SalomonBottomBarItem(
+      //           icon: const Icon(Iconsax.home), title: const Text('Home')),
+      //       SalomonBottomBarItem(
+      //           icon: const Icon(Iconsax.search_favorite),
+      //           title: const Text('Search')),
+      //       SalomonBottomBarItem(
+      //           icon: const Icon(Iconsax.notification),
+      //           title: const Text('Notification')),
+      //       SalomonBottomBarItem(
+      //           icon: const Icon(Iconsax.personalcard),
+      //           title: const Text('Profile')),
+      //     ]),
+      //
+      bottomNavigationBar: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          selectedIndex: currentindex,
+          elevation: 0,
+          onDestinationSelected: (value) {
             setState(() {
               currentindex = value;
             });
           },
-          items: [
-            SalomonBottomBarItem(
-                icon: const Icon(Iconsax.home), title: const Text('Home')),
-            SalomonBottomBarItem(
-                icon: const Icon(Iconsax.search_favorite),
-                title: const Text('Search')),
-            SalomonBottomBarItem(
-                icon: const Icon(Iconsax.notification),
-                title: const Text('Notification')),
-            SalomonBottomBarItem(
-                icon: const Icon(Iconsax.personalcard),
-                title: const Text('Profile')),
+          destinations: const [
+            NavigationDestination(icon: Icon(Iconsax.home_2), label: 'Home'),
+            NavigationDestination(
+                icon: Icon(Iconsax.search_normal), label: 'Search'),
+            NavigationDestination(
+                icon: Icon(Iconsax.personalcard), label: 'Profile'),
           ]),
-      //
-      // NavigationBar(
-      //     labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-      //     selectedIndex: currentindex,
-      //     elevation: 0,
-      //     onDestinationSelected: (value) {
-      //
-      //     },
-      //     destinations: const [
-      //       NavigationDestination(icon: Icon(Iconsax.home_2), label: 'Home'),
-      //       NavigationDestination(
-      //           icon: Icon(Iconsax.search_normal), label: 'Search'),
-      //       NavigationDestination(
-      //           icon: Icon(Iconsax.personalcard), label: 'Profile'),
-      //     ]),
       body: pages[currentindex],
     );
   }

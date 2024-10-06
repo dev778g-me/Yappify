@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:like_button/like_button.dart';
 import 'package:social/chat/mainchat.dart';
@@ -23,6 +26,7 @@ class _HomepageState extends State<Homepage> {
     getdata();
   }
 
+  final _auth = FirebaseAuth.instance;
   final user = FirebaseAuth.instance.currentUser; // Current logged in user
   String username = '';
   // Function to toggle the like status
@@ -43,29 +47,6 @@ class _HomepageState extends State<Homepage> {
         'likes': FieldValue.increment(1),
       });
     }
-  }
-
-  moreoption() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            const ListTile(
-              title: Text('Delete Post'),
-              leading: Icon(Iconsax.profile_delete),
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              title: const Text('Block User'),
-              leading: const Icon(Iconsax.text_block),
-            )
-          ],
-        );
-      },
-    );
   }
 
   Future<void> getdata() async {
@@ -104,8 +85,64 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+  Future<void> deletePost(String postId, String userid) async {
+    try {
+      print("Post ID to delete: $postId");
+      print(userid);
+      if (userid == _auth.currentUser!.uid) {
+        await FirebaseFirestore.instance
+            .collection('Posts')
+            .doc(postId)
+            .delete()
+            .then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Post deleted successfully!'),
+              duration:
+                  Duration(seconds: 2), // Duration the snackbar stays on screen
+              backgroundColor: Colors.green,
+            ),
+          );
+        });
+      } else {
+        Get.snackbar('Error', 'Delete Your Own Post',
+            backgroundColor: Colors.red.withOpacity(0.1),
+            colorText: Colors.red,
+            snackPosition: SnackPosition.TOP);
+      }
+
+      print("Post deleted successfully");
+    } catch (e) {
+      print("Failed to delete post: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    moreoption() {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Wrap(
+            children: [
+              ListTile(
+                onTap: () {},
+                title: Text('Delete Post'),
+                leading: Icon(Iconsax.profile_delete),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                title: const Text('Block User'),
+                leading: const Icon(Iconsax.text_block),
+              )
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       drawer: const Drawer(),
       floatingActionButton: FloatingActionButton(
@@ -235,7 +272,37 @@ class _HomepageState extends State<Homepage> {
                                 const Spacer(),
                                 GestureDetector(
                                     onTap: () {
-                                      moreoption();
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return Wrap(
+                                            children: [
+                                              if (user!.uid ==
+                                                  posts[
+                                                      'userid']) // Show delete option only for post owner
+                                                ListTile(
+                                                  onTap: () {
+                                                    print(posts['timestamp']);
+                                                    deletePost(posts.id,
+                                                        posts['userid']);
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  title: const Text('Delete'),
+                                                  leading:
+                                                      const Icon(Icons.delete),
+                                                ),
+                                              ListTile(
+                                                onTap: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                title: const Text('Block User'),
+                                                leading: const Icon(
+                                                    Iconsax.text_block),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
                                     },
                                     child: const Icon(Icons.more_vert))
                               ],

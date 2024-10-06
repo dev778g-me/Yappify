@@ -57,10 +57,15 @@ class _PostingscreenState extends State<Postingscreen> {
         'email': email,
         'liked by': []
       }).then((_) {
-        Get.snackbar('Success', 'Post added Successfully',
-            backgroundColor: Colors.green.withOpacity(0.1),
-            colorText: Colors.green,
-            snackPosition: SnackPosition.TOP);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Post Added successfully!'),
+            duration:
+                Duration(seconds: 2), // Duration the snackbar stays on screen
+            backgroundColor: Colors.green,
+          ),
+        );
+
         print('succsess');
       }).catchError((onError) {
         print(onError);

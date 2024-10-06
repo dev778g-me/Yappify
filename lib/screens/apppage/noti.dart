@@ -9,6 +9,9 @@ class Notipage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Notification'),
       ),
+      body: Center(
+        child: Text('NOTHING HERE'),
+      ),
     );
   }
 }
