@@ -5,7 +5,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:social/chat/mainchat.dart';
 import 'package:social/screens/apppage/homepage.dart';
-import 'package:social/screens/apppage/noti.dart';
 import 'package:social/screens/apppage/profilepage.dart';
 
 class Homescreen extends StatefulWidget {
