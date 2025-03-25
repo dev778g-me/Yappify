@@ -1,16 +1,70 @@
-# social
+# Yappify
 
-A new Flutter project.
+Yappify is a social media app built with **Flutter** and **Firebase** that allows users to share posts, interact with others, and build their network. Users can post, delete, like, comment, follow, and explore other users' content seamlessly.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+✅ **User Authentication** (Sign Up, Login, Logout)  
+✅ **Create, Read, Update, Delete Posts**  
+✅ **Like & Comment on Posts**  
+✅ **Follow & Unfollow Users**  
+✅ **View Other Users' Profiles**  
+✅ **Real-time Updates with Firebase Firestore**  
+✅ **Profile Picture Upload & Editing**  
+✅ **Dark Mode Support**  
+✅ **Search Users**  
+✅ **Optimized for Performance**  
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Flutter** (Dart) - Frontend
+- **Firebase Authentication** - User authentication
+- **Firebase Firestore** - Database for storing posts, users, and interactions
+- **Firebase Storage** - For media (profile pictures, posts)
+- **Provider/GetX** - State management (whichever you use)
+- **Cloud Functions** - For handling notifications
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Installation
+
+1. **Clone the Repository:**
+   ```sh
+   git clone https://github.com/dev778g-me/Yappify.git
+   
+   ```
+
+2. **Install Dependencies:**
+   ```sh
+   flutter pub get
+   ```
+
+3. **Set Up Firebase:**  
+   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+   - Enable Authentication (Email/Google Sign-In)
+   - Setup Firestore & Firebase Storage
+   - Download `google-services.json` (for Android) and `GoogleService-Info.plist` (for iOS) into the respective folders
+
+4. **Run the App:**
+   ```sh
+   flutter run
+   ```
+
+
+
+## Future Enhancements
+
+🔹 **Story Feature** (Like Instagram Stories)  
+🔹 **Messaging & Chat**  
+🔹 **Video Posting Support**  
+🔹 **Explore Page with Trending Posts**  
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues or pull requests.
+
+## License
+
+This project is licensed under the **MIT License**.
+
+---
+🚀 **Yappify - Connect, Share, Engage!**
+
