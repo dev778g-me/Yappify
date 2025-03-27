@@ -7,8 +7,6 @@ Yappify is a social media app built with **Flutter** and **Firebase** that allow
 ✅ **User Authentication** (Sign Up, Login, Logout)  
 ✅ **Create, Read, Update, Delete Posts**  
 ✅ **Like & Comment on Posts**  
-✅ **Follow & Unfollow Users**  
-✅ **View Other Users' Profiles**  
 ✅ **Real-time Updates with Firebase Firestore**  
 ✅ **Profile Picture Upload & Editing**  
 ✅ **Dark Mode Support**  
