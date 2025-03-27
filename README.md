@@ -24,7 +24,7 @@ Yappify is a social media app built with **Flutter** and **Firebase** that allow
 </p>
 
 <p align="center">
-  <b>Lottie Animated Login Signup With Firebase</b><br>
+  <b>Notifications & Snackbar</b><br>
   <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-174600_social.png" width="400" />
   <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175126_social.png" width="400" />
 </p>
