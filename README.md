@@ -15,6 +15,39 @@ Yappify is a social media app built with **Flutter** and **Firebase** that allow
 ✅ **Search Users**  
 ✅ **Optimized for Performance**  
 
+## 📷 Screenshots
+
+<p align="center">
+  <b>Lottie Animated Login Signup With Firebase</b><br>
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-174434_social.png" width="400" />
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-174441_social.png" width="400" />
+</p>
+
+<p align="center">
+  <b>Lottie Animated Login Signup With Firebase</b><br>
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-174600_social.png" width="400" />
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175126_social.png" width="400" />
+</p>
+
+<p align="center">
+  <b>Post Content</b><br>
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175119_social.png" width="400" />
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175126_social.png" width="400" />
+</p>
+
+<p align="center">
+  <b>Engage With Post(Like,Comment)t</b><br>
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175018_social.png" width="400" />
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175126_social.png" width="400" />
+</p>
+
+<p align="center">
+  <b>Search Users & Edit Profilet</b><br>
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175046_social.png" width="400" />
+  <img src="https://github.com/dev778g-me/Yappify/blob/a456c34eb04e5e3e5c224b391a515842032dc2be/Screenshots/Screenshot_20250327-175132_social.png" width="400" />
+</p>
+
+
 ## Tech Stack
 
 - **Flutter** (Dart) - Frontend
